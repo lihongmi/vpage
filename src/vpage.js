@@ -8,17 +8,26 @@
  * 2.所有回调事件通过 instance.on()
  * ======================================================================== */
 
-import EventEmitter from './lib/EventEmitter'
-import assign from './utils/assign'
-import defaults from './utils/defaults'
-import type from './utils/type'
+/* global $,Hammer */
+
+import EventEmitter from './libs/EventEmitter'
+
+import {defaults,assign,type} from './utils'
 
 export default class Vpage extends EventEmitter{
     constructor(config = {}){
         super()
         this.config = assign({},defaults,config)
         this.$init()
-
+        this.$events()
+        this.$addons()
+    }
+    set current(index){
+        this.current = index
+        this.$render()
+    }
+    get current(){
+        return this.current
     }
     /**
      * [c 读取config配置]
@@ -42,17 +51,27 @@ export default class Vpage extends EventEmitter{
      * @return {[type]} [description]
      */
     $init(){
-        
-    }
-    $loading(){
 
     }
+
     $events(){
+
+    }
+    $addons(){
+        var addons = Vpage._addons,addon
+        for(var i = 0, _len = addons;i < _len;i++){
+            addon = addons[i]
+            if(type(addon) === 'function'){
+                addons[i](this,this.config)
+            }
+        }
+    }
+    $render(){
 
     }
 }
 
-
-Vpage._default = {
-
+Vpage._addons = []
+Vpage.use = function(addon){
+    Vpage._addons.push(addon)
 }
