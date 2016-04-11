@@ -1,0 +1,67 @@
+// 应用容器
+html,body{
+    width: 100%;
+    height: 100%;
+}
+.v-box{
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    .v-loading{
+        display: block;
+        height: 100%;
+        width: 100%;
+    }
+    //页面pages
+    .v-pages{
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: none;
+        z-index: 2;
+        //开启GPU加速渲染
+        transform:translate3d(0,0,0);
+        box-sizing: border-box;
+    }
+    //每一个屏幕
+    .v-slide{
+        flex-shrink: 0;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: none;
+    }
+}
+
+//页面已经加载完成,需要loading的东西都完成了
+.v-loaded{
+    .v-box{
+        position: relative;
+        display: block;
+    }
+    .v-pages{
+        display: flex;
+    }
+    .v-loading{
+        display: none;
+    }
+    .v-slide{
+        display: block;
+    }
+}
+
+//水平翻页
+.v-horizontal{
+    .v-slide{
+        flex-direction: column;
+    }
+}
+//垂直翻页
+.v-vertical{
+    .v-slide{
+        flex-direction: row;
+    }
+}
