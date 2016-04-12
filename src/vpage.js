@@ -13,34 +13,32 @@
 import EventEmitter from './libs/EventEmitter'
 
 import {defaults,assign,type} from './utils'
+import * as vpageConst from './const/vpage-const'
 
 export default class Vpage extends EventEmitter{
     constructor(config = {}){
         super()
         this.config = assign({},defaults,config)
+        this.status = vpageConst.STATUS_INIT
+        this._current = this.$get('initialSlide',0)
         //查找需要缓存你用的节点
         this.$vbox = $('.v-box')
         this.$vloding = $('.v-loading')
         this.$vslides = $('.v-slide')
-        
+        //监听捕获其他插件触发的事件
+        this.$_listening()
         //加载所有运行插件
         this.$addons()
         this.$init()
         this.$events()
     }
-    set current(index){
-        this.current = index
-        this.$render()
-    }
-    get current(){
-        return this.current
-    }
+
     /**
      * [c 读取config配置]
      * @return {[type]} [description]
      */
     $get(key,_def=undefined){
-        return this.config[key] || _def
+        return type(this.config[key]) === 'undefined' ?  _def : this.config[key]
     }
     /**
      * [$set 设置默认配置项]
@@ -56,7 +54,7 @@ export default class Vpage extends EventEmitter{
      * @return {[type]} [description]
      */
     $init(){
-        this.emit('init',this)
+        this.emit(vpageConst.EVENT_INIT,this)
     }
 
     $events(){
@@ -73,6 +71,43 @@ export default class Vpage extends EventEmitter{
     }
     $render(){
 
+    }
+
+    $start(){
+        this.status = vpageConst.STATUS_START
+        this.emit(vpageConst.EVENT_START)
+    }
+    //到下一页
+    $next(e){
+        console.log('next',e)
+    }
+    //翻页到上一页
+    $prev(e){
+        console.log('prev',e)
+    }
+
+    //事件监听
+    $_listening(){
+        this.once(vpageConst.EVENT_START_TRIGGER,this.$start)
+        this.on(vpageConst.EVENT_TO_NEXT,this.$next)
+        this.on(vpageConst.EVENT_TO_PREV,this.$prev)
+    }
+
+    /**
+     * getter and setter
+     */
+    //应用是否已经开始
+    get start(){
+        return this.status === vpageConst.STATUS_START
+    }
+
+    //当前页码
+    set current(index){
+        this._current = index
+        this.$render()
+    }
+    get current(){
+        return this._current
     }
 }
 

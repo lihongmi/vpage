@@ -22,6 +22,7 @@
  * 3.addon.loading.error(current,src,img) lazy加载出错的通知
  * ======================================================================== */
 import {assign} from '../utils/index'
+import * as vpageConst from '../const/vpage-const'
 
 const _def = {
     //需要loading的类
@@ -33,7 +34,9 @@ const _def = {
     //data-src标识源
     dataAttribute:'src',
     //标识图片根目录
-    baseUrl:''
+    baseUrl:'',
+    //加载完成后给body加上的class
+    bodyLoadedClass:'v-loaded'
 }
 
 var event_notice = 'addon.loading.notice',
@@ -54,7 +57,10 @@ export default function(instance,config){
 
     //lazy加载的全部加载完成,移除loading
     instance.once(event_success,()=>{
-        $('body').addClass('v-loaded')
+        $('body').addClass(conf.bodyLoadedClass)
+        //触发应用开始事件,默认只有loading需要提前处理
+        //fixed 在下一轮刷新触发
+        setTimeout(()=>instance.emit(vpageConst.EVENT_START_TRIGGER),0)
     })
     /**
      * [once 应用开始的时候加载需要lazy加载的图片]
@@ -62,7 +68,7 @@ export default function(instance,config){
      * @param  {[type]} function(config [description]
      * @return {[type]}                 [description]
      */
-    instance.once('init',function(config){
+    instance.once(vpageConst.EVENT_INIT,function(config){
         const lazys = $(conf.selector)
         var total = lazys.length,
             loaded = 0,
