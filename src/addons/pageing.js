@@ -14,10 +14,30 @@
  * data-out="flipOutBottom.200.top" 表示flipOutBottom动画在200ms后运行,并且设置z-index未较高优先级
  * ======================================================================== */
 
-var def = {
-    effect:''
-}
+
+import {assign} from '../utils/index'
+import * as vpageConst from '../const/vpage-const'
+
+
 
 export default function(instance,config){
+    console.log(instance)
+    var $pages = instance.$pages
 
+    var inEffect = config.in || $pages.data('in') ,
+        outEffect = config.out || $pages.data('out')
+        // defaults = config.direction === vpageConst.DIRECTION_VERTICAL ? {
+        //     in:
+        // }
+
+    function _getEffect($el,type = 'in'){
+
+    }
+    //页面进入
+    instance.on(vpageConst.EVENT_PAGE_IN,($el)=>{
+        _getEffect($el)
+    })
+    instance.on(vpageConst.EVENT_PAGE_OUT,($el)=>{
+        _getEffect($el,'out')
+    })
 }

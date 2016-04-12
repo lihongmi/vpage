@@ -1,9 +1,11 @@
+import * as vpageConst from '../const/vpage-const'
+
 const config = {
     //翻页方式 horizontal vertical
-    direction:'vertical',
+    direction:vpageConst.DIRECTION_VERTICAL,
     //初始slide ID
     initialSlide:0,
-    //是否自动播放
+    //是否自动播放,自动切换的时间间隔（单位ms），不设定该参数slide不会自动切换。
     autoplay:false,
     //播放速度
     speed:3000,

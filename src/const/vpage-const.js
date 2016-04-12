@@ -16,6 +16,10 @@ export const EVENT_BEFORE_TO_PREV = 'event.before.prev'
 export const EVENT_TO_PREV = 'event.to.prev'
 //成功到达上一页后执行触发
 export const EVENT_AFTER_TO_PREV = 'event.after.prev'
+//页面进入时间,传入参数,需要in的页面zepto的元素 $('.v-slide').eq(current)
+export const EVENT_PAGE_IN = 'event.page.in'
+//页面移出事件,传入参数.需要out的页面zepto的元素 $('.v-slide').eq(current)
+export const EVENT_PAGE_OUT = 'event.page.out'
 
 //通知所有addon
 export const EVENT_ADDON = 'event.addon'
@@ -27,5 +31,12 @@ export const EVENT_DESTORY = 'event.destory'
 export const STATUS_INIT = 'status_init'
 //Vpage处于start状态
 export const STATUS_START = 'status_start'
+//Vpage处于暂停状态
+export const STATUS_PAUSE = 'status_pause'
 //Vpage实例被销毁
 export const STATUS_DESTORY = 'status_destory'
+
+
+//Vpage 翻页方式
+export const DIRECTION_VERTICAL = 'vertical'
+export const DIRECTION_HORIZONTAL = 'horizontal'

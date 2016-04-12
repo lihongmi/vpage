@@ -10,10 +10,8 @@ import {assign} from '../utils/index'
 import * as vpageConst from '../const/vpage-const'
 import Hammer from '../libs/hammer'
 
-const DIRECTION_HORI = 'horizontal'
-const DIRECTION_VERI = 'vertical'
 const _def = {
-    direction:DIRECTION_VERI,
+    // direction:DIRECTION_VERI,
     //Minimal distance required before recognizing.
     threshold:10,
     //Minimal velocity required before recognizing, unit is in px per ms.
@@ -23,6 +21,9 @@ const _def = {
 export default function(instance,config){
     var conf = config.gesture
     if(!conf) return;
+    //移动方向为page实例传来的
+    _def.direction = config.direction
+
     conf = assign({},conf,_def)
 
     var onNext = (e) => instance.emit(vpageConst.EVENT_TO_NEXT,e),
@@ -39,14 +40,15 @@ export default function(instance,config){
             velocity:conf.velocity
         })
 
-        if(conf.direction === DIRECTION_HORI){
-            event_next_type = 'swipeleft'
-            event_prev_type = 'swiperight'
-        }else{
+        if(conf.direction === vpageConst.DIRECTION_VERTICAL){
             //监听下拉事件
             contrl.get('swipe').set({ direction: Hammer.DIRECTION_VERTICAL })
             event_next_type = 'swipeup'
             event_prev_type = 'swipedown'
+
+        }else{
+            event_next_type = 'swipeleft'
+            event_prev_type = 'swiperight'
         }
 
         contrl.on(event_next_type,onNext)

@@ -19,12 +19,7 @@ export default class Vpage extends EventEmitter{
     constructor(config = {}){
         super()
         this.config = assign({},defaults,config)
-        this.status = vpageConst.STATUS_INIT
-        this._current = this.$get('initialSlide',0)
-        //查找需要缓存你用的节点
-        this.$vbox = $('.v-box')
-        this.$vloding = $('.v-loading')
-        this.$vslides = $('.v-slide')
+        this.$_beforeRuning()
         //监听捕获其他插件触发的事件
         this.$_listening()
         //加载所有运行插件
@@ -69,23 +64,60 @@ export default class Vpage extends EventEmitter{
             }
         }
     }
-    $render(){
+    /**
+     * [$render 渲染从last场景切换到to场景]
+     * @param  {[type]} to   [要切换到的场景]
+     * @param  {[type]} last [上一个场景]
+     * @return {[type]}      [description]
+     */
+    $render(to,last = -1){
+        //其他插件阻止了
+        if(!this.start){
+            return false
+        }
+        var $to,$last
+        //给当前页加上`v-active`
+        $to = this.$vslides.eq(to).addClass('v-active')
 
+        this.emit(vpageConst.EVENT_PAGE_IN,$to)
+        if(last !== -1){
+            $last = this.$vslides.eq(last).removeClass('v-active')
+            this.emit(vpageConst.EVENT_PAGE_IN,$to)
+        }
+        this.current = to
     }
 
     $start(){
         this.status = vpageConst.STATUS_START
         this.emit(vpageConst.EVENT_START)
+        this.$render(0)
     }
     //到下一页
     $next(e){
-        console.log('next',e)
+        this.emit(vpageConst.EVENT_BEFORE_TO_NEXT,this)
+        this.$render(this.current + 1,this.current)
+        this.emit(vpageConst.EVENT_AFTER_TO_NEXT,this)
     }
     //翻页到上一页
     $prev(e){
-        console.log('prev',e)
+        //阻止前往下一页
+        this.emit(vpageConst.EVENT_BEFORE_TO_PREV,this)
+        this.$render(this.current - 1,this.current)
+        this.emit(vpageConst.EVENT_AFTER_TO_PREV,this)
     }
-
+    //运行之前,初始化一些东西
+    $_beforeRuning(){
+        this.status = vpageConst.STATUS_INIT
+        //当前运行的节点
+        this._current = this.$get('initialSlide',0)
+        //查找需要缓存你用的节点
+        this.$vbox = $('.v-box')
+        this.$pages = this.$vbox.find('.v-pages')
+        this.$vloding = this.$vbox.find('.v-loading')
+        this.$vslides = this.$vbox.find('.v-slide')
+        //当前总页数
+        this._total = this.$vslides.length
+    }
     //事件监听
     $_listening(){
         this.once(vpageConst.EVENT_START_TRIGGER,this.$start)
@@ -104,7 +136,6 @@ export default class Vpage extends EventEmitter{
     //当前页码
     set current(index){
         this._current = index
-        this.$render()
     }
     get current(){
         return this._current
