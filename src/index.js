@@ -12,11 +12,14 @@ require('./less/index.less')
 
 Object.keys(addons).forEach(addon=>Vpage.use(addons[addon]))
 
-var page = new Vpage({d:1,autoplay:true})
+var page = new Vpage({loading:true,autoplay:true})
 
-page.on('init',function(){
-    console.log('ok')
+page.on('addon.loading.notice',function(){
+    console.log(arguments)
 })
+// page.on('init',function(instance){
+//     // console.log(ar)
+// })
 
-console.dir(Vpage)
-console.dir(page)
+// console.dir(Vpage)
+// console.dir(page)

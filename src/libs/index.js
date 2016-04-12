@@ -7,6 +7,7 @@
  * ======================================================================== */
 import Hammer from './hammer'
 require('./zepto')
+// require('./promise').polyfill()
 
 /**
  * [jQuery 使一些Jquery插件能够正常运行 -.-]

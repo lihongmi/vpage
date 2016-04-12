@@ -18,9 +18,15 @@ export default class Vpage extends EventEmitter{
     constructor(config = {}){
         super()
         this.config = assign({},defaults,config)
+        //查找需要缓存你用的节点
+        this.$vbox = $('.v-box')
+        this.$vloding = $('.v-loading')
+        this.$vslides = $('.v-slide')
+        
+        //加载所有运行插件
+        this.$addons()
         this.$init()
         this.$events()
-        this.$addons()
     }
     set current(index){
         this.current = index
@@ -45,13 +51,12 @@ export default class Vpage extends EventEmitter{
     $set(key,value,cover = true){
         this.config[key] = cover ? value : (type(this.config[key]) === 'undefined' ? value : this.config[key] )
     }
-
     /**
      * [$init 初始化]
      * @return {[type]} [description]
      */
     $init(){
-
+        this.emit('init',this)
     }
 
     $events(){
@@ -59,10 +64,10 @@ export default class Vpage extends EventEmitter{
     }
     $addons(){
         var addons = Vpage._addons,addon
-        for(var i = 0, _len = addons;i < _len;i++){
+        for(var i = 0, _len = addons.length; i < _len ; i++){
             addon = addons[i]
             if(type(addon) === 'function'){
-                addons[i](this,this.config)
+                addon(this,this.config)
             }
         }
     }

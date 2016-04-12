@@ -1,3 +1,5 @@
+//https://github.com/tuupola/jquery_lazyload
+
 /*!
  * Lazy Load - jQuery plugin for lazy loading images
  *
